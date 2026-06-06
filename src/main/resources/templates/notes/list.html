@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BugVault — Notes</title>
+</head>
+<body>
+<h1>BugVault — Public Notes</h1>
+
+<form method="get" action="/notes/search">
+    <input type="text" name="q" placeholder="Search notes...">
+    <button type="submit">Search</button>
+</form>
+
+<ul>
+    <li th:each="note : ${notes}">
+        <a th:href="@{/notes/{id}(id=${note.id})}" th:text="${note.title}">Note title</a>
+        <small th:text="${'by ' + note.owner.username}"></small>
+    </li>
+    <li th:if="${#lists.isEmpty(notes)}">No public notes yet.</li>
+</ul>
+</body>
+</html>

@@ -22,6 +22,7 @@ management:
         include: health,info
 
 app:
+  upload-dir: ${java.io.tmpdir}/bugvault-test-uploads
   jwt:
     secret: "test-secret-key-min-32-chars-xxxxxxxxxxx"
     expiration-ms: 86400000

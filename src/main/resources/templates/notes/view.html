@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${note.title}">Note</title>
+</head>
+<body>
+<a href="/notes">Back</a>
+
+<!--
+  V5 — Stored XSS (CWE-79)
+  VULNERABLE: th:utext renders note title/body as raw HTML
+  SECURE:     th:text escapes all HTML entities before rendering
+-->
+
+<!-- VULNERABLE: title rendered unescaped -->
+<h1 th:if="${vulnXss}" th:utext="${note.title}"></h1>
+<!-- SECURE: title HTML-escaped -->
+<h1 th:unless="${vulnXss}" th:text="${note.title}"></h1>
+
+<p>
+    <small>By <span th:text="${note.owner.username}">user</span>
+    &middot; <span th:text="${note.visibility}">PRIVATE</span></small>
+</p>
+
+<!-- VULNERABLE: body rendered unescaped -->
+<div th:if="${vulnXss}" th:utext="${note.body}"></div>
+<!-- SECURE: body HTML-escaped -->
+<div th:unless="${vulnXss}" th:text="${note.body}"></div>
+</body>
+</html>

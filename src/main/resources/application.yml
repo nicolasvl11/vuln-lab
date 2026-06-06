@@ -45,6 +45,7 @@ vuln:
 
 # V7: hardcoded secret in config (deliberate misconfig)
 app:
+  upload-dir: ${java.io.tmpdir}/bugvault-uploads
   jwt:
     secret: "bugvault-secret-changeme"
     expiration-ms: 86400000

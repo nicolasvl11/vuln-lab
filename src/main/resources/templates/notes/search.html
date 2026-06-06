@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BugVault — Search</title>
+</head>
+<body>
+<h1>BugVault</h1>
+
+<form method="get" action="/notes/search">
+    <input type="text" name="q" th:value="${searchQuery}" placeholder="Search notes...">
+    <button type="submit">Search</button>
+</form>
+
+<!--
+  V5 — Reflected XSS (CWE-79)
+  VULNERABLE: th:utext renders searchQuery as raw HTML — script tags execute
+  SECURE:     th:text HTML-escapes the output — script tags display as text
+-->
+<div th:if="${not #strings.isEmpty(searchQuery)}">
+    <p>
+        <span>Results for: </span>
+        <!-- VULNERABLE path: th:utext = unescaped HTML -->
+        <strong th:if="${vulnXss}" th:utext="${searchQuery}"></strong>
+        <!-- SECURE path: th:text = HTML-escaped -->
+        <strong th:unless="${vulnXss}" th:text="${searchQuery}"></strong>
+    </p>
+</div>
+
+<ul>
+    <li th:each="note : ${notes}">
+        <a th:href="@{/notes/{id}(id=${note.id})}" th:text="${note.title}">Note title</a>
+    </li>
+    <li th:if="${#lists.isEmpty(notes)} and ${not #strings.isEmpty(searchQuery)}">
+        No results found.
+    </li>
+</ul>
+
+<p><a href="/notes">Back to all notes</a></p>
+</body>
+</html>
