@@ -1,0 +1,3 @@
+-- Seed data is inserted programmatically at startup via DataSeeder (added in Phase 2).
+-- DataSeeder uses BCryptPasswordEncoder from the Spring context to avoid hardcoded hashes.
+-- Reserved for future static reference data if needed.

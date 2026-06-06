@@ -1,0 +1,54 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bugvault
+    username: bugvault
+    password: bugvault
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+server:
+  port: 8080
+
+# V7: all actuator endpoints exposed (deliberate misconfig)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    env:
+      show-values: always
+
+# Vuln feature flags — override any flag with env var: VULN_SQLI=false
+vuln:
+  mode: vulnerable
+  sqli: true
+  command-injection: true
+  path-traversal: true
+  idor: true
+  xss: true
+  deserialization: true
+  misconfig: true
+  jwt-none: true
+
+# V7: hardcoded secret in config (deliberate misconfig)
+app:
+  jwt:
+    secret: "bugvault-secret-changeme"
+    expiration-ms: 86400000
+
+logging:
+  level:
+    com.bugvault: DEBUG

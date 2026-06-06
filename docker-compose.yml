@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: bugvault-db
+    environment:
+      POSTGRES_DB: bugvault
+      POSTGRES_USER: bugvault
+      POSTGRES_PASSWORD: bugvault
+    ports:
+      - "5432:5432"
+    volumes:
+      - bugvault_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bugvault -d bugvault"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    container_name: bugvault-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/bugvault
+      SPRING_DATASOURCE_USERNAME: bugvault
+      SPRING_DATASOURCE_PASSWORD: bugvault
+    depends_on:
+      db:
+        condition: service_healthy
+    # Override individual vuln flags at runtime:
+    # VULN_SQLI=false VULN_IDOR=false docker compose up app
+
+volumes:
+  bugvault_data:
